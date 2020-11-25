@@ -483,9 +483,9 @@ int main(int argc, char *argv[]) //required by SDL
       //object
       Dot dot;
       player p1(800);
-      p1.keyConfig(SDLK_UP, SDLK_DOWN, SDLK_LEFT,SDLK_RIGHT);
+      p1.keyConfig(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT,SDL_SCANCODE_RIGHT);
       player p2(300);
-      p2.keyConfig(SDLK_COMMA, SDLK_o, SDLK_a, SDLK_e);
+      p2.keyConfig(SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D);
 
       //set the wall
       SDL_Rect wall;
@@ -500,10 +500,11 @@ int main(int argc, char *argv[]) //required by SDL
       while (!_InputHandler::Instance()->quit) {
         //handle input and events in the queue
         _InputHandler::Instance()->update();
-        p1.accx = 0;
         p1.move();
         p1.simulate();
 
+        p2.move();
+        p2.simulate();
         //clear screen
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(gRenderer);

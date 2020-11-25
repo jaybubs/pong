@@ -18,12 +18,10 @@ player::player(int x)
   accy = 0;
   mCollider.w = this->width;
   mCollider.h = this->height;
-  float acc = 2000;
-
 }
 
 /* for now use a fixed list, figure out a solution later */
-void player::keyConfig(SDL_KeyCode upKey, SDL_KeyCode downKey, SDL_KeyCode leftKey, SDL_KeyCode rightKey)
+void player::keyConfig(SDL_Scancode upKey, SDL_Scancode downKey, SDL_Scancode leftKey, SDL_Scancode rightKey)
 {
   up = upKey;
   down = downKey;
@@ -33,13 +31,19 @@ void player::keyConfig(SDL_KeyCode upKey, SDL_KeyCode downKey, SDL_KeyCode leftK
 
 void player::move()
 {
-  if (keyPressed(SDL_SCANCODE_LEFT)) {
-      std::cout << accx << std::endl;
+  accx = 0.f;
+  accy = 0.f;
+  if (keyPressed(left)) {
       accx -= 2000;
   }
-  if (keyPressed(SDL_SCANCODE_RIGHT)) {
-    std::cout << "you are right" << std::endl;
+  if (keyPressed(right)) {
       accx += 2000;
+  }
+  if (keyPressed(up)) {
+      accy -= 2000;
+  }
+  if (keyPressed(down)) {
+      accy += 2000;
   }
 }
 
@@ -47,10 +51,18 @@ void player::simulate()
 {
   //suvat
   float delta = 0.016667f;
-  accx -= velx * 10.f;
+  accx -= velx * 5.f;
+  posx += velx * delta + accx * delta * delta * 0.5f;
   velx += accx * delta;
-  posx = posx + velx * delta + accx * delta * delta * 0.5f;
-  /* velx = velx + accx *delta ; */
+
+  accy -= vely * 100.f;
+  posy += vely * delta + accy * delta * delta * 0.5f;
+  vely += accy * delta;
+  if (vely != 0) {
+      std::cout << "pos: " << posy << std::endl;
+      std::cout << "vel: " << vely << std::endl;
+      std::cout << "acc: " << accy << std::endl;
+  }
 }
 
 

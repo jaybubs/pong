@@ -15,7 +15,7 @@ class player
     int height = 300;
     int vel = 20;
     int bup;
-    SDL_KeyCode up, down, left, right;
+    SDL_Scancode up, down, left, right;
     float acc;
 
   /* private: */
@@ -31,9 +31,10 @@ class player
     void handleEvent(SDL_Event& e);
     void move();
     void render();
-    void keyConfig(SDL_KeyCode, SDL_KeyCode, SDL_KeyCode, SDL_KeyCode);
+    void keyConfig(SDL_Scancode, SDL_Scancode, SDL_Scancode, SDL_Scancode);
     /* void simulate(); */
     void simulate();
+    void keyConf(SDL_Scancode);
 
   private:
     SDL_Rect mCollider;

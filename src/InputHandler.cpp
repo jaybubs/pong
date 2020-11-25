@@ -58,10 +58,10 @@ bool InputHandler::keyPressed(SDL_Scancode key)
 
 void InputHandler::keyDown(SDL_Event* event)
 {
-  std::cout << SDL_GetKeyName(event->key.keysym.sym) << std::endl;
+
 }
 void InputHandler::keyUp(SDL_Event* event)
 {
-  std::cout << SDL_GetKeyName(event->key.keysym.sym) << std::endl;
+
 }
 
