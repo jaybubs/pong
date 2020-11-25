@@ -1,0 +1,2 @@
+c:\dev\cpp\pong\x64\Debug\pong.exe
+c:\dev\cpp\pong\x64\Debug\pong.pdb
