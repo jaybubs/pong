@@ -1,6 +1,15 @@
 #pragma once
 #include <SDL.h>
 #include <iostream>
+#include <vector>
+#include <Vector2D.h>
+
+enum mouse_buttons
+{
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+};
 
 /* this class is a singleton, so constructor is private */
 class InputHandler
@@ -13,6 +22,9 @@ public:
 private:
   const Uint8* state;
   static InputHandler* instance;
+
+  std::vector<bool> mouseButtonStates;
+  Vector2D* mPos;
 
 /*methods*/
 public:
@@ -32,12 +44,29 @@ public:
   /* for key state mapping */
   bool keyPressed(SDL_Scancode key);
 
+  /* mouse shit */
+  bool getMouseButtonState(int buttonNum)
+  {
+    return mouseButtonStates[buttonNum];
+  }
+
+  Vector2D* getMousePos()
+  {
+    return mPos;
+  }
+
+  void reset();
+
 private:
   InputHandler() {};
   ~InputHandler() {};
 
   void keyDown(SDL_Event* event);
   void keyUp(SDL_Event* event);
+
+  void onMouseMove(SDL_Event& e);
+  void onMouseButtonDown(SDL_Event& e);
+  void onMouseButtonUp(SDL_Event& e);
   
 
 };

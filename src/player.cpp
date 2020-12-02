@@ -8,61 +8,71 @@ bool keyPressed(SDL_Scancode a)
   return _InputHandler::Instance()->keyPressed(a);
 }
 
-player::player(int x)
+player::player()
 {
-  posx = x;
-  posy = utils::screenH/2 - this->height/2;
+  posx = 0;
+  posy = utils::screenH/2 - this->playerHeight/2;
   velx = 0;
   vely = 0;
   accx = 0;
   accy = 0;
-  mCollider.w = this->width;
-  mCollider.h = this->height;
+
+  /* instantiate entity */
+  /* have the entity weild the width and height properties for collion purposes */
 }
 
 /* for now use a fixed list, figure out a solution later */
-void player::keyConfig(SDL_Scancode upKey, SDL_Scancode downKey, SDL_Scancode leftKey, SDL_Scancode rightKey)
+void player::keyConfig(SDL_Scancode upKey, SDL_Scancode downKey)
 {
   up = upKey;
   down = downKey;
-  left = leftKey;
-  right = rightKey;
 }
 
+  int i = 0;
 void player::move()
 {
   accx = 0.f;
   accy = 0.f;
-  if (keyPressed(left)) {
-      accx -= 2000;
-  }
-  if (keyPressed(right)) {
-      accx += 2000;
-  }
   if (keyPressed(up)) {
-      accy -= 2000;
+      accy -= 20000;
   }
   if (keyPressed(down)) {
-      accy += 2000;
+      accy += 20000;
   }
+  if (_InputHandler::Instance()->getMouseButtonState(LEFT)) {
+    /* accvec.dir = mPos - playerPos */
+    /* accvec.mag += 5000; */
+    std::cout << _InputHandler::Instance()->getMousePos() << std::endl;
+    }
+
+}
+
+void player::arenaCollision()
+{
+  if (posy < 0) {
+    posy = 0;
+    vely *= 0;
+  }
+  if (posy + playerHeight > utils::screenH) {
+    posy = utils::screenH - playerHeight;
+    vely *=0;
+  }
+  
 }
 
 void player::simulate()
 {
   //suvat
-  float delta = 0.016667f;
-  accx -= velx * 5.f;
+  float delta = 0.016666667f;
+  accx -= velx * 10.f;
   posx += velx * delta + accx * delta * delta * 0.5f;
   velx += accx * delta;
 
-  accy -= vely * 100.f;
+  accy -= vely * 10.f;
   posy += vely * delta + accy * delta * delta * 0.5f;
   vely += accy * delta;
-  if (vely != 0) {
-      std::cout << "pos: " << posy << std::endl;
-      std::cout << "vel: " << vely << std::endl;
-      std::cout << "acc: " << accy << std::endl;
-  }
+
+  arenaCollision();
 }
 
 

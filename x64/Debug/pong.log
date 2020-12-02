@@ -1,11 +1,4 @@
 ﻿  player.cpp
-C:\dev\cpp\pong\src\player.cpp(34,10): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(35,10): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(55,21): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(58,21): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(60,53): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(61,23): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(63,23): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(64,53): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\dev\cpp\pong\src\player.cpp(65,23): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\dev\cpp\pong\src\player.cpp(14,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\dev\cpp\pong\src\player.cpp(57,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   pong.vcxproj -> C:\dev\cpp\pong\x64\Debug\pong.exe

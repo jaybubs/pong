@@ -7,6 +7,8 @@
 #include <iostream>
 #include <InputHandler.h>
 #include <player.h>
+#include <dot.h>
+#include <Collision.h>
 #include <utils.h>
 
 
@@ -84,24 +86,6 @@ class LTimer
     bool mStarted;
 };
 
-class Dot
-{
-  public:
-    static const int DOT_WIDTH = 20;
-    static const int DOT_HEIGHT = 20;
-    static const int DOT_VEL = 20;
-    Dot ();
-    //needs & e because events should be changeable
-    void handleEvent(SDL_Event& e);
-    void move(SDL_Rect& wall);
-    void render();
-
-  private:
-    int mposx, mposy;
-    int mvelx, mvely;
-    SDL_Rect mCollider;
-};
-
 bool initialiseSDL();
 bool loadMedia();
 void killSDL();
@@ -109,55 +93,6 @@ void killSDL();
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 TTF_Font* gFont = NULL;
-
-//dot shit
-Dot::Dot()
-{
-  mposx = 0;
-  mposy = 0;
-  mvelx = 10;
-  mvely = 0;
-  mCollider.w = DOT_WIDTH;
-  mCollider.h = DOT_HEIGHT;
-}
-
-void Dot::handleEvent(SDL_Event& e)
-{
-  if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-    switch (e.key.keysym.sym) {
-      case SDLK_UP: mvely    -= DOT_VEL; break;
-      case SDLK_DOWN: mvely  += DOT_VEL; break;
-      case SDLK_LEFT: mvelx  -= DOT_VEL; break;
-      case SDLK_RIGHT: mvelx += DOT_VEL; break;
-    }
-  }
-  if (e.type == SDL_KEYUP && e.key.repeat == 0) {
-    switch (e.key.keysym.sym) {
-      case SDLK_UP: mvely    += DOT_VEL; break;
-      case SDLK_DOWN: mvely  -= DOT_VEL; break;
-      case SDLK_LEFT: mvelx  += DOT_VEL; break;
-      case SDLK_RIGHT: mvelx -= DOT_VEL; break;
-    }
-  }
-}
-
-void Dot::move(SDL_Rect& wall)
-{
-  mposx += mvelx;
-  mCollider.x = mposx;
-  if ((mposx < 0) || (mposx + DOT_WIDTH > utils::screenW) || utils::checkCollision(mCollider, wall)) {
-    mposx -= mvelx;
-    mCollider.x = mposx;
-  }
-  mposy += mvely;
-  mCollider.y = mposy;
-  if ((mposy < 0) || (mposy + DOT_HEIGHT > utils::screenH) || utils::checkCollision(mCollider, wall)) {
-    mposy -= mvely;
-    mCollider.y = mposy;
-  }
-}
-
-
 
 LTexture gDotTexture;
 void Dot::render()
@@ -482,19 +417,20 @@ int main(int argc, char *argv[]) //required by SDL
 
       //object
       Dot dot;
-      player p1(800);
-      p1.keyConfig(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT,SDL_SCANCODE_RIGHT);
-      player p2(300);
-      p2.keyConfig(SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D);
+      player p1;
+      p1.posx = 0.9*utils::screenW;
+      p1.keyConfig(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
+      player p2;
+      p2.posx = 0.1*utils::screenW;
+      p2.keyConfig(SDL_SCANCODE_W, SDL_SCANCODE_S);
 
-      //set the wall
-      SDL_Rect wall;
-      wall.x = 600;
-      wall.y = 400;
-      wall.w = 40;
-      wall.h = 40;
+      SDL_Rect p1box;
+      SDL_Rect p2box;
       //text color
       SDL_Color textColor = {0,0,0,255};
+      //text color
+
+      Collision collide;
 
       //while app is running
       while (!_InputHandler::Instance()->quit) {
@@ -503,20 +439,77 @@ int main(int argc, char *argv[]) //required by SDL
         p1.move();
         p1.simulate();
 
+
+        //player collision
+        if (
+            collide.aabbaabb(
+              p1.posx, p1.posy, p1.playerWidth, p1.playerHeight, 
+              p2.posx, p2.posy, p2.playerWidth, p2.playerHeight)
+           ) {
+          //1.2 prevents players from sticking together
+          p1.velx *= -1.2;
+          p1.vely *= -1.2;
+          p2.velx *= -1.2;
+          p2.vely *= -1.2;
+        } 
+
+        //check collision before moving p2 to prevent players sticking together
         p2.move();
         p2.simulate();
+
+        dot.move();
+
+        //dot collision
+        if (
+            collide.aabbaabb(
+              p1.posx, p1.posy, p1.playerWidth, p1.playerHeight, 
+              dot.mposx, dot.mposy, dot.DOT_WIDTH, dot.DOT_HEIGHT)
+           ) {
+          dot.mvelx *= -1.1;
+          dot.mvely = (dot.mposy - p1.posy)*2 + p1.vely * .9f;
+        } 
+
+        if (
+            collide.aabbaabb(
+              p2.posx, p2.posy, p2.playerWidth, p2.playerHeight, 
+              dot.mposx, dot.mposy, dot.DOT_WIDTH, dot.DOT_HEIGHT)
+           ) {
+          dot.mvelx *= -1.1;
+          dot.mvely = (dot.mposy - p2.posy)*2 + p2.vely * .9f;
+        } 
         //clear screen
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        //render the wall
-        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0x00);
-        SDL_RenderDrawRect(gRenderer, &wall);
 
-        //render objects
-        /* dot.render(); */
-        p1.render();
-        p2.render();
+        //dot collision box
+        SDL_Rect rectangle;
+        rectangle.x = dot.mposx;
+        rectangle.y = dot.mposy;
+        rectangle.w = dot.DOT_WIDTH;
+        rectangle.h = dot.DOT_HEIGHT;
+
+        //render players
+        /* p1.render(); */
+        p1box.x = p1.posx;
+        p1box.y = p1.posy;
+        p1box.w = p1.playerWidth;
+        p1box.h = p1.playerHeight;
+
+        p2box.x = p2.posx;
+        p2box.y = p2.posy;
+        p2box.w = p2.playerWidth;
+        p2box.h = p2.playerHeight;
+
+        SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0x00);
+        SDL_RenderDrawRect(gRenderer, &p1box);
+        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0x00);
+        SDL_RenderDrawRect(gRenderer, &p2box);
+
+        dot.render();
+
+        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0x00);
+        SDL_RenderDrawRect(gRenderer, &rectangle);
 
         //update screen
         SDL_RenderPresent(gRenderer);

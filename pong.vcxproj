@@ -19,16 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\dot.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Collision.h" />
+    <ClInclude Include="inc\dot.h" />
     <ClInclude Include="inc\InputHandler.h" />
     <ClInclude Include="inc\physics.h" />
     <ClInclude Include="inc\utils.h" />
     <ClInclude Include="inc\game.h" />
     <ClInclude Include="inc\player.h" />
+    <ClInclude Include="inc\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="arrow.png" />
