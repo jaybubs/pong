@@ -12,7 +12,7 @@ class player
 {
   /*properties*/
   public:
-    const int playerWidth = 2;
+    const int playerWidth = 20;
     const int playerHeight = 300;
     int vel;
     int bup;

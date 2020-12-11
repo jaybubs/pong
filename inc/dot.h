@@ -1,5 +1,7 @@
 #pragma once
 #include <SDL.h>
+#include <Texture.h>
+#include <Score.h>
 
 class Dot
 {
@@ -8,9 +10,12 @@ class Dot
     static const int DOT_HEIGHT = 20;
     static const int DOT_VEL = 20;
     Dot ();
+    Texture gDotTexture;
     //needs & e because events should be changeable
     void move();
-    void render();
+    void render(SDL_Renderer* gRenderer);
+    bool loadMedia(SDL_Renderer* gRenderer);
+    Score score;
 
   /* private: */
     float mposx, mposy;

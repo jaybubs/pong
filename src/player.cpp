@@ -51,11 +51,11 @@ void player::arenaCollision()
 {
   if (posy < 0) {
     posy = 0;
-    vely *= 0;
+    vely *= -1;
   }
   if (posy + playerHeight > utils::screenH) {
     posy = utils::screenH - playerHeight;
-    vely *=0;
+    vely *= -1;
   }
   
 }

@@ -23,12 +23,18 @@
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\Score.cpp" />
+    <ClCompile Include="src\Text.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Collision.h" />
     <ClInclude Include="inc\dot.h" />
     <ClInclude Include="inc\InputHandler.h" />
     <ClInclude Include="inc\physics.h" />
+    <ClInclude Include="inc\Score.h" />
+    <ClInclude Include="inc\Text.h" />
+    <ClInclude Include="inc\Texture.h" />
     <ClInclude Include="inc\utils.h" />
     <ClInclude Include="inc\game.h" />
     <ClInclude Include="inc\player.h" />
